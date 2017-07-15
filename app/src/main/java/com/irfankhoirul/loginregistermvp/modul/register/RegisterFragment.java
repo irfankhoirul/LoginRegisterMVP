@@ -1,9 +1,23 @@
-package com.irfankhoirul.loginregistermvp.modul.register;
+/*
+ * Copyright 2017.  Irfan Khoirul Muhlishin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+package com.irfankhoirul.loginregistermvp.modul.register;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +28,7 @@ import android.widget.RadioButton;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.irfankhoirul.loginregistermvp.R;
+import com.irfankhoirul.loginregistermvp.data.pojo.User;
 import com.irfankhoirul.loginregistermvp.data.source.remote.UserRepositoryImpl;
 import com.irfankhoirul.mvp_core.base.BaseFragment;
 
@@ -24,9 +39,6 @@ import butterknife.OnClick;
 import static com.basgeekball.awesomevalidation.ValidationStyle.TEXT_INPUT_LAYOUT;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RegisterFragment extends BaseFragment<RegisterActivity, RegisterContract.Presenter>
         implements RegisterContract.View {
 
@@ -66,9 +78,9 @@ public class RegisterFragment extends BaseFragment<RegisterActivity, RegisterCon
             String password = etPassword.getText().toString();
             String gender;
             if (rbMale.isChecked()) {
-                gender = "M";
+                gender = User.GENDER_MALE;
             } else {
-                gender = "F";
+                gender = User.GENDER_FEMALE;
             }
             mPresenter.performRegister(name, email, gender, password);
         }

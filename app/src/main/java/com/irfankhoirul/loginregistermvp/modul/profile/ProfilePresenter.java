@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017.  Irfan Khoirul Muhlishin
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.irfankhoirul.loginregistermvp.modul.profile;
 
 import com.irfankhoirul.loginregistermvp.data.pojo.User;
@@ -6,10 +22,6 @@ import com.irfankhoirul.loginregistermvp.data.source.remote.UserRepository;
 import com.irfankhoirul.mvp_core.custom_views.ConstantStatus;
 import com.irfankhoirul.mvp_core.data.DataResult;
 import com.irfankhoirul.mvp_core.data.RequestResponseListener;
-
-/**
- * Created by Irfan Khoirul on 7/15/2017.
- */
 
 public class ProfilePresenter implements ProfileContract.Presenter {
 
@@ -38,12 +50,12 @@ public class ProfilePresenter implements ProfileContract.Presenter {
         userRepository.logout(user.getAuthToken(), new RequestResponseListener() {
             @Override
             public void onSuccess(DataResult dataResult) {
+                view.setLoadingDialog(false, null);
                 if (dataResult.getCode() == ConstantStatus.STATUS_SUCCESS) {
                     sessionRepository.destroy();
                     view.showStatus(ConstantStatus.STATUS_SUCCESS, dataResult.getMessage());
                     view.redirectToLogin();
                 } else {
-                    view.setLoadingDialog(false, null);
                     view.showStatus(ConstantStatus.STATUS_ERROR, dataResult.getMessage());
                 }
             }
