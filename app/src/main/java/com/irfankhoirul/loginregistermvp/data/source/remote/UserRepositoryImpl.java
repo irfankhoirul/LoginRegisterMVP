@@ -15,7 +15,8 @@ import retrofit2.Call;
  */
 
 public class UserRepositoryImpl extends BaseRemoteRepository<UserEndPoints> implements UserRepository {
-    private static final String BASE_URL = "http://127.0.0.1:8000/api/";
+    // Localhost PC
+    private static final String BASE_URL = "http://10.0.2.2:8000/api/";
 
     @Override
     protected String setBaseUrl() {
@@ -38,12 +39,13 @@ public class UserRepositoryImpl extends BaseRemoteRepository<UserEndPoints> impl
         params.put("name", user.getName());
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
+        params.put("gender", user.getGender());
         Call<DataResult> call = endPoint.register(params);
         execute(call, listener);
     }
 
     @Override
-    public void login(String email, String password, RequestResponseListener listener) {
+    public void login(String email, String password, RequestResponseListener<User> listener) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);

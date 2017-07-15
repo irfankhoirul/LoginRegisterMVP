@@ -10,13 +10,9 @@ import com.irfankhoirul.mvp_core.base.BaseView;
 public interface LoginContract {
     interface View extends BaseView<Presenter> {
         void redirectToProfile();
-
-        void redirectToRegister();
     }
 
     interface Presenter extends BasePresenter {
-        void performLogin();
-
-        boolean isUserLoggedIn();
+        void performLogin(String email, String password);
     }
 }

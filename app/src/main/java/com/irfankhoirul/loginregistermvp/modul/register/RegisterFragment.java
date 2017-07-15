@@ -1,7 +1,6 @@
-package com.irfankhoirul.loginregistermvp.modul.login;
+package com.irfankhoirul.loginregistermvp.modul.register;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.irfankhoirul.loginregistermvp.R;
-import com.irfankhoirul.loginregistermvp.data.source.local.SessionRepositoryImpl;
 import com.irfankhoirul.loginregistermvp.data.source.remote.UserRepositoryImpl;
-import com.irfankhoirul.loginregistermvp.modul.profile.ProfileActivity;
-import com.irfankhoirul.loginregistermvp.modul.register.RegisterActivity;
 import com.irfankhoirul.mvp_core.base.BaseFragment;
 
 import butterknife.BindView;
@@ -30,14 +27,21 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends BaseFragment<LoginActivity, LoginContract.Presenter> implements LoginContract.View {
+public class RegisterFragment extends BaseFragment<RegisterActivity, RegisterContract.Presenter>
+        implements RegisterContract.View {
 
+    @BindView(R.id.et_name)
+    EditText etName;
     @BindView(R.id.et_email)
     EditText etEmail;
     @BindView(R.id.et_password)
     EditText etPassword;
+    @BindView(R.id.rb_male)
+    RadioButton rbMale;
+    @BindView(R.id.rb_female)
+    RadioButton rbFemale;
 
-    public LoginFragment() {
+    public RegisterFragment() {
         // Required empty public constructor
     }
 
@@ -45,37 +49,39 @@ public class LoginFragment extends BaseFragment<LoginActivity, LoginContract.Pre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        fragmentView = inflater.inflate(R.layout.fragment_login, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_register, container, false);
         unbinder = ButterKnife.bind(this, fragmentView);
 
-        mPresenter = new LoginPresenter(this, new UserRepositoryImpl(),
-                new SessionRepositoryImpl(getActivity()));
+        mPresenter = new RegisterPresenter(this, new UserRepositoryImpl());
         mPresenter.start();
 
         return fragmentView;
     }
 
-    @OnClick(R.id.bt_login)
-    public void setBtLoginClick() {
-        if (validateLoginForm()) {
+    @OnClick(R.id.bt_register)
+    public void setBtRegisterClick() {
+        if (validateRegistrationForm()) {
+            String name = etName.getText().toString();
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
-            mPresenter.performLogin(email, password);
+            String gender;
+            if (rbMale.isChecked()) {
+                gender = "M";
+            } else {
+                gender = "F";
+            }
+            mPresenter.performRegister(name, email, gender, password);
         }
     }
 
-    @OnClick(R.id.bt_register)
-    public void setBtRegisterClick() {
-        Intent intent = new Intent(activity, RegisterActivity.class);
-        startActivity(intent);
-    }
-
-    private boolean validateLoginForm() {
+    private boolean validateRegistrationForm() {
         AwesomeValidation formValidation = new AwesomeValidation(TEXT_INPUT_LAYOUT);
         formValidation.addValidation(activity, R.id.til_email, Patterns.EMAIL_ADDRESS,
                 R.string.validation_email_must_be_valid);
         formValidation.addValidation(activity, R.id.til_email, RegexTemplate.NOT_EMPTY,
                 R.string.validation_email_should_not_empty);
+        formValidation.addValidation(activity, R.id.til_name, RegexTemplate.NOT_EMPTY,
+                R.string.validation_name_should_not_empty);
         formValidation.addValidation(activity, R.id.til_password, RegexTemplate.NOT_EMPTY,
                 R.string.validation_password_should_not_empty);
 
@@ -84,11 +90,11 @@ public class LoginFragment extends BaseFragment<LoginActivity, LoginContract.Pre
 
     @Override
     protected void setTitle() {
-        title = getResources().getString(R.string.fragment_title_login);
+        title = getString(R.string.fragment_title_register);
     }
 
     @Override
-    public void setPresenter(LoginContract.Presenter presenter) {
+    public void setPresenter(RegisterContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
@@ -103,9 +109,8 @@ public class LoginFragment extends BaseFragment<LoginActivity, LoginContract.Pre
     }
 
     @Override
-    public void redirectToProfile() {
-        Intent intent = new Intent(activity, ProfileActivity.class);
-        startActivity(intent);
+    public void redirectToLogin() {
         activity.finish();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.irfankhoirul.loginregistermvp.modul.login;
+package com.irfankhoirul.loginregistermvp.modul.profile;
 
 import com.irfankhoirul.loginregistermvp.data.pojo.User;
 import com.irfankhoirul.loginregistermvp.data.source.local.SessionRepository;
@@ -8,17 +8,18 @@ import com.irfankhoirul.mvp_core.data.DataResult;
 import com.irfankhoirul.mvp_core.data.RequestResponseListener;
 
 /**
- * Created by Irfan Khoirul on 7/14/2017.
+ * Created by Irfan Khoirul on 7/15/2017.
  */
 
-public class LoginPresenter implements LoginContract.Presenter {
+public class ProfilePresenter implements ProfileContract.Presenter {
 
-    private final LoginContract.View view;
-    private final UserRepository userRepository;
+    private final ProfileContract.View view;
     private final SessionRepository sessionRepository;
+    private final UserRepository userRepository;
+    private User user;
 
-    public LoginPresenter(LoginContract.View view, UserRepository userRepository,
-                          SessionRepository sessionRepository) {
+    public ProfilePresenter(ProfileContract.View view, SessionRepository sessionRepository,
+                            UserRepository userRepository) {
         this.view = view;
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
@@ -27,21 +28,20 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void start() {
-        if (isUserLoggedIn()) {
-            view.redirectToProfile();
-        }
+        user = getUserData();
+        view.showProfile(user);
     }
 
     @Override
-    public void performLogin(String email, String password) {
-        view.setLoadingDialog(true, "Logging In");
-        userRepository.login(email, password, new RequestResponseListener<User>() {
+    public void performLogout() {
+        view.setLoadingDialog(true, "Logging out");
+        userRepository.logout(user.getAuthToken(), new RequestResponseListener() {
             @Override
-            public void onSuccess(DataResult<User> dataResult) {
+            public void onSuccess(DataResult dataResult) {
                 if (dataResult.getCode() == ConstantStatus.STATUS_SUCCESS) {
-                    sessionRepository.initialize(dataResult.getData());
+                    sessionRepository.destroy();
                     view.showStatus(ConstantStatus.STATUS_SUCCESS, dataResult.getMessage());
-                    view.redirectToProfile();
+                    view.redirectToLogin();
                 } else {
                     view.setLoadingDialog(false, null);
                     view.showStatus(ConstantStatus.STATUS_ERROR, dataResult.getMessage());
@@ -56,11 +56,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         });
     }
 
-    private boolean isUserLoggedIn() {
-        if (sessionRepository.getSessionData() != null) {
-            return true;
-        }
-        return false;
+    private User getUserData() {
+        return sessionRepository.getSessionData();
     }
-
 }

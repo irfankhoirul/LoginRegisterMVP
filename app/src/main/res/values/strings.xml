@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Login Register MVP</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_title_login">Login</string>
+    <string name="fragment_title_profile">Profile</string>
+    <string name="fragment_title_register">Register</string>
+    <string name="validation_email_must_be_valid">Email must be valid!</string>
+    <string name="validation_email_should_not_empty">Email should not empty!</string>
+    <string name="validation_name_should_not_empty">Name should not empty!</string>
+    <string name="validation_password_should_not_empty">Password should not empty!</string>
 </resources>
