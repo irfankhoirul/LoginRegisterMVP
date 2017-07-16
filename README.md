@@ -1,6 +1,6 @@
 # LoginRegisterMVP
 
-This is an example of Model View Presenter Architecture and example of the usage of [MVPCore](https://github.com/irfankhoirul/MVPCore) library. The API use in this example is provided in [LoginRegisterMVP-Service](https://github.com/irfankhoirul/LoginRegisterMVP-Service) repository.
+This is an example of Model View Presenter Architecture and example of the usage of [MVPCore](https://github.com/irfankhoirul/MVPCore) library. The API used in this example is provided in [LoginRegisterMVP-Service](https://github.com/irfankhoirul/LoginRegisterMVP-Service) repository.
 
 ### What I Use
   - [MVPCore](https://github.com/irfankhoirul/MVPCore)
